@@ -1,0 +1,6 @@
+streamlit>=1.40
+openai>=1.50
+requests>=2.31
+imageio-ffmpeg>=0.5
+python-dotenv>=1.0
+Jinja2>=3.1

@@ -1,0 +1,21 @@
+---
+client_name: Urban Threads
+contact_name: Aisha Rahman
+contact_role: Co-founder
+industry: E-commerce / Fashion
+service: Shopify store rebuild & paid social campaigns
+timeline: 3 months
+---
+Call notes (rough) - Aisha, Urban Threads
+
+- Before: store on old WooCommerce theme, slow, checkout kept breaking on mobile
+- Aisha said "we were basically paying for ads that sent people to a broken checkout"
+- Cart abandonment was really high, she thinks around 80%
+- We migrated them to Shopify, rebuilt product pages, simplified checkout to one page
+- Also ran Meta + TikTok ads, new creative every two weeks
+- Aisha: "the new site just feels like a real brand now, customers keep telling us it looks premium"
+- Aisha: "I love that they explained everything in plain English, I never felt lost"
+- Results she mentioned: conversion rate went from 0.9% to 2.4%, return on ad spend roughly 3.1x now vs under 1x before
+- Revenue - she said "best quarter we've ever had" but didn't want exact numbers published
+- Said she'd definitely work with us again for the next collection launch
+- Minor: wanted faster turnaround on some creative revisions

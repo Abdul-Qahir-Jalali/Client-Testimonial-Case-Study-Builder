@@ -1,0 +1,64 @@
+# {{ c.case_study.title }}
+
+> **Client:** {{ d.client_name or "—" }}{% if d.industry %} · **Industry:** {{ d.industry }}{% endif %}{% if d.service %} · **Service:** {{ d.service }}{% endif %}{% if d.timeline %} · **Timeline:** {{ d.timeline }}{% endif %}
+
+
+{{ c.case_study.summary }}
+
+---
+
+## Client Testimonials
+
+{% for q in c.testimonials %}
+### {{ q.length | capitalize }}{% if q.theme %} — {{ q.theme }}{% endif %}
+
+
+> "{{ q.text }}"
+>
+> — **{{ q.speaker_name or d.contact_name or "Client" }}**{% if q.speaker_role %}, {{ q.speaker_role }}{% endif %}{% if d.client_name %}, {{ d.client_name }}{% endif %}
+
+
+{% endfor %}
+---
+
+## Case Study
+
+### The Challenge
+
+{{ c.case_study.challenge }}
+
+### The Solution
+
+{% for item in c.case_study.solution %}
+- {{ item }}
+{% endfor %}
+
+### The Results
+
+{% for item in c.case_study.results %}
+- {{ item }}
+{% endfor %}
+{% if c.case_study.key_metrics %}
+
+#### Key Metrics
+
+| Metric | Value |
+|---|---|
+{% for m in c.case_study.key_metrics %}
+| {{ m.label }} | {{ m.value }} |
+{% endfor %}
+{% endif %}
+{% if c.review_notes %}
+
+---
+
+## Review Before Publishing
+
+{% for n in c.review_notes %}
+- [ ] {{ n }}
+{% endfor %}
+{% endif %}
+
+---
+
+<sub>Generated {{ generated }} · Delivered by {{ d.agency_name }}</sub>

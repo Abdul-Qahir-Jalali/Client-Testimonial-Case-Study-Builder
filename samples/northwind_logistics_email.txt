@@ -1,0 +1,24 @@
+---
+client_name: Northwind Logistics
+contact_name: James Carter
+contact_role: Head of Operations
+industry: Logistics & Freight
+service: Custom operations dashboard & workflow automation
+timeline: 4 months
+---
+hey team,
+
+wanted to send some thoughts since you asked for feedback for the case study.
+
+before the project our dispatch team was running everything off like 6 different spreadsheets and nobody trusted the numbers. weekly reporting took my ops analyst almost 2 full days to put together and by the time it was done it was already out of date. we had no real visibility on late deliveries until customers complained.
+
+you guys built us a live dashboard that pulls from our TMS and the driver app, and automated the weekly report so it just lands in everyone's inbox monday morning. also the alerts for delayed shipments - that one has been huge.
+
+results so far: reporting time went from 2 days to basically 15 minutes. late deliveries are down 22% over the last quarter because we catch problems early now. and the team actually uses one source of truth which honestly I didn't think would happen.
+
+what I liked most was that you didn't overcomplicate it. you trained my team properly and the handover docs were really clear. it felt like working with people who understood logistics not just software.
+
+happy for you to use my name. just please don't mention our client names from the dashboard screenshots.
+
+cheers,
+James

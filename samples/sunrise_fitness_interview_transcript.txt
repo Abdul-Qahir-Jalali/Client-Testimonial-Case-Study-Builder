@@ -1,0 +1,39 @@
+---
+client_name: Sunrise Fitness Studios
+contact_name: Hamza Qureshi
+contact_role: Founder & CEO
+industry: Health & Fitness
+service: Mobile app development & member onboarding automation
+timeline: 5 months
+---
+Recorded interview transcript - Sunrise Fitness Studios project review
+Participants: Bilal (Interviewer), Hamza Qureshi (Founder & CEO), Nadia Khan (Studio Operations Lead)
+
+[00:00] Bilal (Interviewer): Thanks for joining, both of you. How's the new studio in DHA going by the way?
+[00:08] Hamza: Haha, it's chaos but good chaos. We open next month inshallah.
+[00:15] Bilal (Interviewer): Great. So let's start at the beginning, what was the situation before we started working together?
+[00:22] Hamza: So, um, honestly the biggest problem was bookings. Everything was on WhatsApp. Members would message the front desk to book a class, and half the time the message got lost or the class was already full and nobody knew.
+[00:41] Nadia: Yeah and I was literally maintaining a paper register plus an Excel sheet for three branches. Every Monday I'd spend the whole morning just reconciling who attended what.
+[00:52] Hamza: And new members, the onboarding was terrible. They'd sign up, pay, and then nobody would follow up. A lot of them just stopped coming after two or three weeks.
+[01:05] Bilal (Interviewer): Did you have any numbers on that drop-off?
+[01:09] Hamza: Roughly, we were losing around 40% of new members within the first month. That was the scary number.
+[01:18] Bilal (Interviewer): Okay. And why did you pick us for this?
+[01:22] Hamza: Mostly because you'd done the restaurant app for my cousin and he wouldn't stop talking about it, haha.
+[01:30] Bilal (Interviewer): Ha, good to hear. So walk me through what we built.
+[01:35] Hamza: You built the Sunrise app for iOS and Android, where members can see the timetable, book classes, join waitlists, and pay for packages. And there's the admin dashboard for Nadia's team.
+[01:50] Nadia: The automated onboarding was the part I loved. Now when someone signs up they get a welcome series, a free PT session booking link, and check-in reminders in week one, two and four. I didn't have to do any of that manually.
+[02:06] Hamza: Also you integrated it with our payment gateway, so package renewals happen automatically now.
+[02:14] Bilal (Interviewer): And how did the process feel from your side, working with the team?
+[02:19] Hamza: Very structured. You did the two-week sprints and every second Friday we'd get a demo build on our phones. I liked that we could actually touch the app early instead of just seeing designs.
+[02:33] Nadia: The only thing, the first version of the dashboard was a bit confusing, too many menus. But you fixed it after our feedback in like a week.
+[02:44] Bilal (Interviewer): Let's talk results. I'd guess bookings went up something like 50%?
+[02:50] Hamza: No, not that much honestly. Class bookings went up about 25% in the first three months. But the bigger win was retention.
+[03:01] Hamza: First-month drop-off went from about 40% down to around 15%. That's the number that matters to me.
+[03:10] Nadia: And for me, the Monday reconciliation is gone. What used to take four hours now takes maybe ten minutes because it's all in the dashboard.
+[03:19] Hamza: The app has over 2,000 active members using it now across the three branches. People actually rate it well too, it's 4.7 on the Play Store.
+[03:30] Bilal (Interviewer): Amazing. Would you say revenue doubled?
+[03:34] Hamza: I can't share revenue figures, sorry. Our investors would kill me, haha. Let's just say it's been our strongest year.
+[03:42] Bilal (Interviewer): Totally fine. Last question, would you recommend us?
+[03:46] Hamza: Absolutely. If you're a fitness business still running on WhatsApp and spreadsheets, just do it. It changed how we run the whole business.
+[03:55] Nadia: Same. It gave me my Mondays back, honestly.
+[04:00] Bilal (Interviewer): Thank you both, really appreciate it.

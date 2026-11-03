@@ -1,0 +1,21 @@
+---
+client_name: BrightPath Dental Group
+contact_name: Dr. Sarah Malik
+contact_role: Practice Owner
+industry: Healthcare / Dental
+service: Website redesign & online booking system
+timeline: 10 weeks
+---
+Interview notes - call with Dr. Sarah Malik, 14 Oct
+
+Q: What was going on before you came to us?
+Sarah: So um, honestly our old website was, like, from 2016. It wasn't mobile friendly at all and patients kept calling the front desk just to book a cleaning. My receptionists were spending maybe 3 hours a day on the phone just doing bookings, you know. We were also losing people because they'd visit the site on their phone and just leave.
+
+Q: How did the project go?
+Sarah: The team ran a discovery workshop with us first which I really liked because they actually asked our front desk staff what they needed. Then they redesigned the whole site and integrated an online booking system with our practice software. They also set up automatic SMS reminders. Communication was great, I got a weekly update every Friday and they were super responsive on WhatsApp.
+
+Q: What changed after launch?
+Sarah: Online bookings went from basically zero to about 40% of all appointments in the first two months. No-shows dropped from around 18% to 7% because of the reminders. And my front desk, they finally have time to actually look after patients in the clinic. Honestly it's been a game changer. I'd recommend them to any practice that's still stuck doing everything by phone.
+
+Q: Anything we could have done better?
+Sarah: Maybe the content stage took a bit longer than expected, but that was partly on us getting photos together.

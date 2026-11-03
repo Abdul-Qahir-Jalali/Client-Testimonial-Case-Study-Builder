@@ -1,0 +1,15 @@
+[server]
+# Allow large interview recordings, including video (MB)
+maxUploadSize = 2000
+
+[client]
+# Clean UI: hide the developer toolbar
+toolbarMode = "minimal"
+
+[theme]
+base = "light"
+primaryColor = "#4F46E5"
+backgroundColor = "#F6F7FB"
+secondaryBackgroundColor = "#F1F5F9"
+textColor = "#0F172A"
+font = "sans serif"

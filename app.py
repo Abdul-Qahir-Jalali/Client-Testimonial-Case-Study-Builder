@@ -20,6 +20,8 @@ from generator import (
 import ui
 from case_study_view import render_case_study_html
 import ai_video
+import share_view
+import social
 import video_maker
 from story_view import render_story_html
 from testimonial_view import estimate_height, render_testimonials_html
@@ -127,6 +129,70 @@ def video_section(content: dict, details: ProjectDetails, accent: str) -> None:
         mid.download_button("Download video (MP4)", data, file_name=Path(saved["path"]).name, mime="video/mp4",
                             use_container_width=True, type="primary", key="dl_video")
         ui.note("1080x1920 MP4, ready for TikTok, Instagram Reels and YouTube Shorts. Saved in the output/ folder.", "video")
+
+
+def share_section(content: dict, details: ProjectDetails) -> None:
+    """Tab 5: captions + hashtags per platform, and one button each that copies the caption and opens the upload page."""
+    ui.banner("info", "Get the client's approval before posting",
+              "Check the captions and the video with them first. Nothing is posted by this app: each button copies "
+              "the caption and opens that platform's upload page, where you attach the video and press Post.",
+              icon="shield-check")
+
+    video = st.session_state.get("video")
+    video_path = Path(video["path"]) if video and Path(video["path"]).exists() else None
+    with st.container(border=True, key="card_share_opts"):
+        left, right = st.columns([1, 3], gap="large")
+        with left:
+            if video_path:
+                st.video(str(video_path))
+                st.download_button("Download video", video_path.read_bytes(), file_name=video_path.name,
+                                   mime="video/mp4", use_container_width=True, key="dl_video_share")
+            else:
+                ui.note("No video yet. Create one in the Video tab, then download it here.", "video")
+        with right:
+            ui.section_head("wand-sparkles", "Write the captions", "One tailored post per platform, hashtags included")
+            c1, c2 = st.columns([1, 2])
+            tone = c1.selectbox("Tone", social.TONES, key="share_tone")
+            link = c2.text_input("Link to include (optional)", key="share_link",
+                                 placeholder="https://your-site.com/case-study")
+            emojis = st.toggle("Use a few emojis", value=True, key="share_emoji")
+            if st.button("Rewrite captions" if st.session_state.get("social") else "Write captions",
+                         type="primary", use_container_width=True, key="btn_captions"):
+                with st.spinner("Writing captions and checking every number against the case study..."):
+                    posts, warnings, used_ai = social.write_posts(content, details, tone=tone, emojis=emojis, link=link)
+                for key, post in posts.items():
+                    st.session_state[f"share_cap_{key}"] = post.caption
+                    st.session_state[f"share_tags_{key}"] = " ".join(post.hashtags)
+                    if key == "youtube":
+                        st.session_state["share_title_youtube"] = post.title
+                st.session_state["social"] = {"warnings": warnings, "ai": used_ai}
+
+    state = st.session_state.get("social")
+    if not state:
+        return
+    if not state["ai"]:
+        ui.banner("info", "These captions come from a template",
+                  "Add a Groq key to .env for captions written specifically for each platform.")
+    if state["warnings"]:
+        ui.banner("warn", "Check these numbers before posting", items=state["warnings"], icon="search-check")
+
+    for p in social.PLATFORMS:
+        with st.container(border=True, key=f"card_share_{p.key}"):
+            ui.section_head(p.icon, p.name, p.spec)
+            if p.key == "youtube":
+                st.text_input("Title", key="share_title_youtube", max_chars=social.TITLE_LIMIT)
+            st.text_area("Caption", key=f"share_cap_{p.key}", height=260 if p.key == "linkedin" else 170)
+            st.text_input("Hashtags", key=f"share_tags_{p.key}")
+            text = social.compose(social.Post(""), st.session_state[f"share_cap_{p.key}"],
+                                  st.session_state[f"share_tags_{p.key}"])
+            if len(text) > p.limit:
+                ui.banner("warn", f"{len(text):,} characters: {p.name} allows {p.limit:,}", "Shorten the caption or hashtags.")
+            else:
+                ui.note(f"{len(text):,} of {p.limit:,} characters", "hash")
+            extras = [("Copy title", st.session_state["share_title_youtube"], "Title")] if p.key == "youtube" else []
+            components.html(share_view.post_buttons_html(p.open_label, p.icon, text, social.open_url(p, text), extras),
+                            height=64)
+            ui.note(p.tips, "lightbulb")
 
 
 def use_transcript(file_id: str) -> None:
@@ -327,7 +393,8 @@ if generate_clicked:
         with st.spinner("Writing testimonials and case study, then fact-checking them..."):
             st.session_state["result"] = generate(st.session_state["notes"], details)
             st.session_state["details"] = details
-            st.session_state.pop("video", None)  # a new result makes the old video stale
+            st.session_state.pop("video", None)  # a new result makes the old video and posts stale
+            st.session_state.pop("social", None)
     except GenerationError as exc:
         ui.banner("err", "Could not generate content", str(exc))
 
@@ -351,7 +418,7 @@ else:
                          key="exp_fixed"):
             st.markdown("\n".join(f"- {i}" for i in fc["auto_fixed"]))
 
-    tab1, tab2, tab3, tab4 = st.tabs(["Testimonials", "Case study", "Markdown", "Video"])
+    tab1, tab2, tab3, tab4, tab5 = st.tabs(["Testimonials", "Case study", "Markdown", "Video", "Share"])
     with tab1:
         quotes = result.content["testimonials"]
         components.html(render_testimonials_html(quotes, details.client_name, accent),
@@ -380,6 +447,8 @@ else:
 
     with tab4:
         video_section(result.content, details, accent)
+    with tab5:
+        share_section(result.content, details)
 
     st.write("")
     d1, d2, _ = st.columns([1, 1, 1])

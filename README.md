@@ -39,6 +39,7 @@ A Streamlit app that turns raw client feedback (typed notes, emails, interview t
 - **Credits the right speaker.** Quotes are attributed to whoever actually said them, and an approval reminder is added when that isn't the main contact.
 - **Ready to use.** Testimonials open with a featured quote, can be filtered by length, and copy with their attribution. The case study comes as an auto-playing story or a full page, and the whole result exports as Markdown.
 - **Short video.** One click makes a vertical video for TikTok, Reels or Shorts, as branded slides or as a free AI-generated film of the client's story, with an optional free voiceover.
+- **Ready to share.** Captions and hashtags tailored to LinkedIn, TikTok, Instagram, Facebook and YouTube, with a button for each that copies the caption and opens the upload page.
 - **Ready to demo.** Four realistic sample inputs are included.
 
 ---
@@ -182,6 +183,16 @@ The **Video** tab turns the fact-checked result into a 20–35 second 9:16 video
 - A free Hugging Face token is optional: set `HF_TOKEN` in `.env` for a bigger daily limit. `VIDEO_VOICE` and `VIDEO_VOICE_RATE` change the voice and speed.
 - Videos are saved in `output/` and can be downloaded from the tab.
 
+### Sharing on social media
+
+The **Share** tab writes a ready-to-post caption and hashtags for **LinkedIn, TikTok, Instagram, Facebook and YouTube Shorts**. Pick a tone, optionally add a link and choose whether to use emojis, then click **Write captions**.
+
+- Each platform gets its own caption, length and hashtag count. YouTube also gets a title. Everything is editable, with a live character counter.
+- Every number in the captions is checked against your case study. Anything that cannot be matched is flagged before you post, and quotes are only used word for word.
+- Click a platform's button (for example **Open LinkedIn**) to copy the caption and open that platform's upload page. LinkedIn also opens with the text already filled in. Attach the downloaded video there and press Post.
+- Nothing is posted automatically. TikTok, Instagram, Facebook and YouTube only allow automatic posting through an approved developer app, so the final upload stays one click on the platform itself. Get the client's approval first.
+- Without a Groq key, template captions built from the case study are used instead.
+
 ### Using a recording or link
 
 1. Choose **Audio / video**, then pick one of:
@@ -275,6 +286,8 @@ Client-Testimonial-Case-Study-Builder/
 ├── story_view.py               # Animated case-study story player (Story view)
 ├── case_study_view.py          # Editorial case-study page (Full page view)
 ├── video_maker.py              # Video tab: scenes, captions, voiceover and ffmpeg assembly
+├── social.py                   # Share tab: per-platform captions, hashtags and number check
+├── share_view.py               # Share tab: copy-and-open buttons
 ├── ai_video.py                 # Free prompt-to-video: storyboard, FLUX frames, Wan 2.2 animation
 ├── transcribe.py               # Audio / video / link → speaker-labelled transcript (ElevenLabs Scribe)
 ├── cli.py                      # Optional command-line version

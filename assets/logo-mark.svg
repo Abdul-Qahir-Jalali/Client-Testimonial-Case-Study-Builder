@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 64 64" role="img" aria-label="Testimonial Studio logo">
+  <defs><linearGradient id="tsg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#818CF8"/><stop offset="1" stop-color="#C084FC"/></linearGradient></defs>
+  <path d="M32 3l25 14.5v29L32 61 7 46.5v-29z" fill="#0F172A" stroke="url(#tsg)" stroke-width="2.5" stroke-linejoin="round"/>
+  <rect x="18" y="19" width="28" height="7" rx="3.5" fill="#fff"/>
+  <rect x="28.5" y="19" width="7" height="27" rx="3.5" fill="#fff"/>
+  <circle cx="45" cy="44" r="5" fill="#F59E0B"/>
+</svg>

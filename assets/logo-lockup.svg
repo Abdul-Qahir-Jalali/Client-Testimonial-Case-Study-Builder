@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="80" viewBox="0 0 360 80" role="img" aria-label="Testimonial Studio">
+  <defs><linearGradient id="tsg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#818CF8"/><stop offset="1" stop-color="#C084FC"/></linearGradient></defs>
+  <g transform="translate(4 8)">
+    <path d="M32 3l25 14.5v29L32 61 7 46.5v-29z" fill="#0F172A" stroke="url(#tsg)" stroke-width="2.5" stroke-linejoin="round"/>
+    <rect x="18" y="19" width="28" height="7" rx="3.5" fill="#fff"/>
+    <rect x="28.5" y="19" width="7" height="27" rx="3.5" fill="#fff"/>
+    <circle cx="45" cy="44" r="5" fill="#F59E0B"/>
+  </g>
+  <text x="84" y="39" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="27" font-weight="800" fill="#0F172A" letter-spacing="-0.5">Testimonial<tspan fill="#7C3AED" font-weight="500"> Studio</tspan></text>
+  <text x="85" y="60" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12.5" font-weight="500" fill="#64748B">Case studies from client feedback</text>
+</svg>

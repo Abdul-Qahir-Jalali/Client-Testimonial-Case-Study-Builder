@@ -1,4 +1,8 @@
-# Client Testimonial & Case Study Builder
+<p align="center">
+  <img src="assets/logo-mark.svg" width="88" alt="Testimonial Studio logo">
+</p>
+
+<h1 align="center">Client Testimonial &amp; Case Study Builder</h1>
 
 A Streamlit app that turns raw client feedback (typed notes, emails, interview transcripts, an **interview audio or video recording**, or a **video link**) into polished, ready-to-use marketing content. It uses the **Groq API** for writing and **ElevenLabs** for audio transcription.
 
@@ -200,6 +204,7 @@ Client-Testimonial-Case-Study-Builder/
 ├── ui.py                       # Visual design: styles, header, cards, result components
 ├── icons.py                    # Lucide icons (vendored SVGs) used across the UI
 ├── favicon.svg                 # Browser-tab icon
+├── assets/                     # Logo files (mark and full lockup)
 ├── generator.py                # Main pipeline: Groq call, validation, self-correction, rendering
 ├── prompts.py                  # AI instructions and JSON output format
 ├── factcheck.py                # Code-level fact checks against the original notes

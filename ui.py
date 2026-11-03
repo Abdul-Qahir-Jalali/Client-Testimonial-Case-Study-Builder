@@ -221,8 +221,8 @@ label p{font-weight:500 !important;color:#334155 !important}
 .empty .big{color:var(--accent)}.empty .big svg{display:block;margin:0 auto}.empty .t{font-size:16px;font-weight:700;color:#334155;margin-top:6px}
 
 .sb-brand{display:flex;align-items:center;gap:12px;padding-bottom:16px;margin-bottom:16px;border-bottom:1px solid rgba(255,255,255,.08)}
-.sb-logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#6366F1,#A855F7);display:flex;flex:none;
-  align-items:center;justify-content:center;color:#fff;box-shadow:0 6px 16px rgba(99,102,241,.35)}
+.sb-logo{width:44px;height:44px;display:flex;flex:none;align-items:center;justify-content:center;
+  filter:drop-shadow(0 6px 14px rgba(129,140,248,.35))}
 .sb-name{font-weight:800;font-size:15.5px;color:#fff;line-height:1.2;letter-spacing:-.01em}
 .sb-sub{font-size:12px;color:#94A3B8;margin-top:2px}
 .sb-title{display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#A5B4FC;
@@ -291,10 +291,20 @@ def banner(kind: str, title: str, body: str = "", items: list[str] | None = None
                 f'<div><b>{_e(title)}</b>{body_html}{lst}</div></div>', unsafe_allow_html=True)
 
 
+def logo_mark(size: int = 40, fill: str = "#0F172A") -> str:
+    """The Testimonial Studio mark (same artwork as assets/logo-mark.svg), inline so it needs no file serving."""
+    return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 64 64" role="img" '
+            f'aria-label="Testimonial Studio"><defs><linearGradient id="tsg" x1="0" y1="0" x2="1" y2="1">'
+            f'<stop offset="0" stop-color="#818CF8"/><stop offset="1" stop-color="#C084FC"/></linearGradient></defs>'
+            f'<path d="M32 3l25 14.5v29L32 61 7 46.5v-29z" fill="{fill}" stroke="url(#tsg)" stroke-width="2.5" '
+            f'stroke-linejoin="round"/><rect x="18" y="19" width="28" height="7" rx="3.5" fill="#fff"/>'
+            f'<rect x="28.5" y="19" width="7" height="27" rx="3.5" fill="#fff"/><circle cx="45" cy="44" r="5" fill="#F59E0B"/></svg>')
+
+
 def sidebar_brand() -> None:
     st.markdown(
         f"""
-<div class="sb-brand"><div class="sb-logo">{svg("sparkles", 20)}</div>
+<div class="sb-brand"><div class="sb-logo">{logo_mark(44, "#1B2440")}</div>
   <div><div class="sb-name">Testimonial Studio</div><div class="sb-sub">Case studies from client feedback</div></div></div>
 <div class="sb-title plain">How it works</div>
 <div class="sb-steps">

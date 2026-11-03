@@ -215,17 +215,17 @@ def speaker_naming(source_id: str) -> None:
 # --------------------------------------------------------------------------- #
 with st.sidebar:
     ui.sidebar_brand()
-    st.divider()
-    ui.sidebar_title("Try a sample")
-    choice = st.selectbox("Sample input", ["— none —", *SAMPLES], label_visibility="collapsed")
-    if st.button("Load sample", use_container_width=True):
-        load_sample(choice)
-        st.rerun()
+    with st.container(key="sb_card_sample"):
+        ui.sidebar_title("Try a sample", "flask-conical")
+        choice = st.selectbox("Sample input", ["— none —", *SAMPLES], label_visibility="collapsed")
+        if st.button("Load sample", use_container_width=True, key="btn_load_sample"):
+            load_sample(choice)
+            st.rerun()
 
-    st.divider()
-    ui.sidebar_title("Branding")
-    agency = st.text_input("Your agency name", value=ProjectDetails().agency_name)
-    accent = st.color_picker("Case study colour", value="#4F46E5")
+    with st.container(key="sb_card_brand"):
+        ui.sidebar_title("Branding", "palette")
+        agency = st.text_input("Your agency name", value=ProjectDetails().agency_name)
+        accent = st.color_picker("Case study colour", value="#4F46E5")
     ui.sidebar_footer()
 
 # --------------------------------------------------------------------------- #

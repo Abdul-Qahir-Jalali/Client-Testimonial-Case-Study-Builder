@@ -42,7 +42,8 @@ WIDGET_ICONS = [
     (".st-key-btn_video button p", "sparkles"),
     (".st-key-dl_video button p", "download"),
     (".st-key-video_style [role=\"radiogroup\"] > :nth-child(1) p", "clapperboard"),
-    (".st-key-video_style [role=\"radiogroup\"] > :nth-child(2) p", "wand-sparkles"),
+    (".st-key-video_style [role=\"radiogroup\"] > :nth-child(2) p", "zap"),
+    (".st-key-video_style [role=\"radiogroup\"] > :nth-child(3) p", "wand-sparkles"),
     (".st-key-exp_fixed summary p", "wrench"),
     (".st-key-exp_review summary p", "lock"),
 ]

@@ -11,6 +11,9 @@ venv/
 output/*
 !output/.gitkeep
 
+# Generated launch video (/brag): large and regenerable
+brag-output*/
+
 # Editor / OS / tooling
 .vscode/
 .idea/

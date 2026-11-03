@@ -51,7 +51,13 @@ CSS = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-:root{--accent:#4F46E5;--accent-2:#7C3AED;--ink:#0F172A;--muted:#64748B;--line:#E2E8F0;--soft:#EEF2FF;--bg:#F6F7FB}
+:root{--accent:#4F46E5;--accent-2:#7C3AED;--ink:#0F172A;--muted:#5B6B7F;--line:#E2E8F0;--soft:#EEF2FF;--bg:#F6F7FB}
+::selection{background:rgba(79,70,229,.22)}
+.stMain{accent-color:var(--accent)}
+.stMain button:focus-visible,.stMain [role="tab"]:focus-visible,.stMain [data-testid="stRadioOption"]:has(input:focus-visible){
+  outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){.stButton button,.stDownloadButton button{transition:none}
+  .stButton button:hover,.stDownloadButton button:hover,[data-testid="stBaseButton-primary"]:hover{transform:none}}
 html, body, [class*="css"], .stApp, .stMarkdown, button, input, textarea, select{
   font-family:"Inter","Segoe UI",system-ui,-apple-system,sans-serif !important}
 .stApp{background:var(--bg)}
@@ -168,9 +174,7 @@ label p{font-weight:500 !important;color:#334155 !important}
   position:relative;overflow:hidden;margin-bottom:18px}
 .hero:after{content:"";position:absolute;right:-60px;bottom:-90px;width:280px;height:280px;border-radius:50%;
   background:rgba(255,255,255,.06)}
-.hero .tag{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
-  padding:5px 12px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:.04em}
-.hero h1{font-size:34px !important;line-height:1.15;font-weight:800 !important;margin:14px 0 8px !important;color:#fff !important;
+.hero h1{text-wrap:balance;font-size:34px !important;line-height:1.15;font-weight:800 !important;margin:14px 0 8px !important;color:#fff !important;
   padding:0 !important}
 .hero p{font-size:16px;color:#E0E7FF;max-width:760px;margin:0}
 .hero .feats{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
@@ -186,7 +190,7 @@ label p{font-weight:500 !important;color:#334155 !important}
 
 .note{font-size:12.5px;color:var(--muted);display:flex;gap:6px;align-items:center;margin-top:6px}
 .note svg{flex:none}
-.hero .tag svg,.hero .feat svg{flex:none}
+.hero .feat svg{flex:none}
 .hero-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .hero-top > svg{flex:none;filter:drop-shadow(0 6px 14px rgba(15,23,42,.45))}
 .hero-brand{font-weight:800;font-size:17px;letter-spacing:-.01em;color:#fff;margin-right:4px}
@@ -204,11 +208,11 @@ label p{font-weight:500 !important;color:#334155 !important}
 .banner ul{margin:6px 0 0 0;padding-left:18px}.banner li{margin-bottom:4px}
 
 .results-head{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;margin:26px 0 12px}
-.results-head .t{font-size:24px;font-weight:800;color:var(--ink)}
+.results-head .t{font-size:24px;font-weight:800;color:var(--ink);text-wrap:balance}
 .results-head .s{font-size:14px;color:var(--muted)}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:14px}
 .stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px}
-.stat .v{font-size:22px;font-weight:800;color:var(--ink)}
+.stat .v{font-size:22px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
 .stat .l{font-size:12.5px;color:var(--muted);margin-top:2px}
 .stat.good .v{color:#059669}.stat.bad .v{color:#DC2626}
 
@@ -249,8 +253,7 @@ def hero() -> None:
     st.markdown(
         f"""
 <div class="hero">
-  <div class="hero-top">{logo_mark(46, "#1B2440")}<span class="hero-brand">Testimonial Studio</span>
-    <span class="tag">{svg("sparkles", 14)} AI CONTENT STUDIO</span></div>
+  <div class="hero-top">{logo_mark(46, "#1B2440")}<span class="hero-brand">Testimonial Studio</span></div>
   <h1>Client Testimonial &amp; Case Study Builder</h1>
   <p>Turn raw client feedback, interview transcripts or recordings into polished testimonials and a
      Challenge {svg("arrow-right", 15)} Solution {svg("arrow-right", 15)} Results case study, with every number fact-checked against the source.</p>

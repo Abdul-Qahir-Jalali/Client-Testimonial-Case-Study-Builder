@@ -61,7 +61,10 @@ def estimate_height(quotes: list[dict]) -> int:
 TEMPLATE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--accent:__ACCENT__;--ink:#0F172A;--muted:#64748B;--line:#E2E8F0;--soft:#EEF2FF}
+:root{--accent:__ACCENT__;--ink:#0F172A;--muted:#5B6B7F;--line:#E2E8F0;--soft:#EEF2FF}
+::selection{background:rgba(79,70,229,.22)}
+.chip:focus-visible,.btn:focus-visible,.copy:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.card.feat .copy:focus-visible{outline-color:#fff}
 *{box-sizing:border-box}
 html,body{margin:0;background:transparent}
 body{font-family:Inter,"Segoe UI",system-ui,sans-serif;color:var(--ink);padding:4px 2px 10px;-webkit-font-smoothing:antialiased}
@@ -90,7 +93,7 @@ svg.lucide{display:block;flex:none}
 .meta{display:flex;flex-wrap:wrap;gap:6px;padding-right:34px}
 .tag{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:999px;background:#F1F5F9;color:#475569}
 .tag.len i{width:7px;height:7px;border-radius:50%;background:var(--tone)}
-.q{margin:0;flex:1;font-size:16.5px;line-height:1.65;color:#1E293B;font-weight:450}
+.q{margin:0;flex:1;font-size:16.5px;line-height:1.65;color:#1E293B;font-weight:450;text-wrap:pretty}
 .who{display:flex;align-items:center;gap:12px;border-top:1px solid #F1F5F9;padding-top:14px}
 .avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#7C3AED);color:#fff;font-weight:700;font-size:13px;
   display:flex;align-items:center;justify-content:center;flex:none}
@@ -115,6 +118,7 @@ svg.lucide{display:block;flex:none}
 .card.feat .copy.done{background:#ECFDF5;color:#047857;border-color:#A7F3D0}
 .empty{display:none;text-align:center;color:var(--muted);padding:34px;border:1px dashed #CBD5E1;border-radius:16px;background:#fff;font-size:14px}
 @media (max-width:640px){.grid{grid-template-columns:1fr}.card.feat .q{font-size:19px}}
+@media (prefers-reduced-motion:reduce){.card,.chip,.btn,.copy{transition:none}.card:hover{transform:none}}
 </style></head><body>
 <div class="bar">
   <div class="chips" id="chips">__CHIPS__</div>

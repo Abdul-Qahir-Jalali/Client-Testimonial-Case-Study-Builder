@@ -314,7 +314,9 @@ blockquote.say .w{opacity:.08;transition:opacity .5s ease}
   h2.big{font-size:24px}.cover h1{font-size:32px}.pstat .n,.metric .n{font-size:32px}
   .ctrl{padding:14px 0 0;bottom:0;padding-bottom:16px;background:linear-gradient(transparent,rgba(14,14,18,.55))}
   .player.light .ctrl{background:linear-gradient(rgba(251,250,247,0),var(--paper) 45%)}}
-@media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;animation:none!important}}
+/* Reduced motion: scenes still change and content still appears, but without the choreography. Control feedback (hover, focus) is kept. */
+@media (prefers-reduced-motion:reduce){.r,.scene,.cover h1 .w,.flow .line,.node,.meter i,.trow .arrow path{
+  transition-duration:.01ms!important;transition-delay:0s!important;animation:none!important}}
 </style></head><body>
 <div class="player" id="player">
   <div class="top"><div class="bars" id="bars"></div>
@@ -459,6 +461,7 @@ const chapterEl=document.getElementById('chapter'), countEl=document.getElementB
 const prev=document.getElementById('prev'), next=document.getElementById('next'), play=document.getElementById('play');
 const DUR = 7500;   // ms per scene in autoplay
 let cur=-1, playing=true, t0=0, elapsed=0, raf=null;
+const REDUCE = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;   // no autoplay, no count-up
 
 scenes.forEach((s,k)=>{ const b=el('div','bar'); b.appendChild(el('i')); b.onclick=()=>{ go(k); }; barsEl.appendChild(b); });
 const bars=[...barsEl.children];
@@ -467,6 +470,7 @@ function runCounters(root){
   root.querySelectorAll('[data-to]').forEach(n=>{ const to=+n.dataset.to, from=n.dataset.from!=null? +n.dataset.from : 0;
     const dec=+n.dataset.dec, pre=n.dataset.pre, suf=n.dataset.suf, comma=!!n.dataset.comma;
     const startDelay = n.dataset.from!=null ? 900 : 400, dur=1600; let st=null;
+    if(REDUCE){ n.textContent = pre + fmt(to,dec,comma) + suf; return; }
     n.textContent = pre + fmt(from,dec,comma) + suf;
     setTimeout(()=>{ function tick(ts){ if(st===null) st=ts; const p=Math.min(1,(ts-st)/dur), e=1-Math.pow(1-p,3);
       n.textContent = pre + fmt(from+(to-from)*e, dec, comma) + suf; if(p<1) requestAnimationFrame(tick); }
@@ -497,7 +501,7 @@ play.onclick=()=>{ if(cur===scenes.length-1){ go(0); setPlaying(true); } else se
 document.addEventListener('keydown',e=>{ if(e.key==='ArrowRight') go(cur+1); else if(e.key==='ArrowLeft') go(cur-1);
   else if(e.key===' '){ e.preventDefault(); play.click(); } });
 
-setPlaying(true); go(0); requestAnimationFrame(loop);
+setPlaying(!REDUCE); go(0); requestAnimationFrame(loop);
 </script></body></html>"""
 
 ICO_PREV = f'<svg viewBox="0 0 24 24" class="ico">{_lucide("chevron-left")}</svg>'

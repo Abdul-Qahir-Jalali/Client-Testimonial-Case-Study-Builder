@@ -137,7 +137,7 @@ def _scene_html(i: int, s: Scene, agency: str, start: float, dur: float) -> str:
     d = s.data
     strip = (f'<div class="brand">{LOGO.format(n=f"b{i}")}<span>{_E(agency)}</span></div>' if s.kind != "cta" else "")
     if s.kind == "hook":
-        big = (f'<div class="big" id="big{i}">{_counting(d["big"])}</div><div class="lab" id="lab{i}">{_E(d["label"])}</div>'
+        big = (f'<div class="big fit" id="big{i}">{_counting(d["big"])}</div><div class="lab" id="lab{i}">{_E(d["label"])}</div>'
                if d["big"] else "")
         title_px = 56 if d["big"] else _size(d["title"], [(60, 104), (110, 88)], 72)
         body = (f'<div class="pill" id="pill{i}">Case study &middot; {_E(d["client"])}</div>{big}'
@@ -148,7 +148,7 @@ def _scene_html(i: int, s: Scene, agency: str, start: float, dur: float) -> str:
                 f'<div class="ttl" id="ttl{i}" style="font-size:{px}px">{_words(d["text"])}</div>')
     elif s.kind == "results":
         rows = "".join(
-            f'<div class="row" id="row{i}_{k}"><div class="rv">{_counting(r["value"]) if r["value"] else ""}</div>'
+            f'<div class="row" id="row{i}_{k}"><div class="rv fit">{_counting(r["value"]) if r["value"] else ""}</div>'
             f'<div class="rl">{_E(r["label"])}</div><div class="bar"><i></i></div></div>' for k, r in enumerate(d["rows"]))
         body = f'<div class="pill" id="pill{i}">The results</div><div class="rows">{rows}</div>'
     elif s.kind == "quote":
@@ -205,6 +205,9 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:#0b1020}
 def _timeline_js(scenes: list[Scene], starts: list[float], durs: list[float], total: float) -> str:
     j = []
     a = j.append
+    # Numbers are one unbreakable line: shrink any that are wider than the text column so nothing leaves the frame.
+    a("document.querySelectorAll('.fit').forEach(el=>{let s=parseFloat(getComputedStyle(el).fontSize);"
+      "while(Math.max(el.offsetWidth,el.scrollWidth)>888&&s>40){s-=4;el.style.fontSize=s+'px';}});")
     a("window.__timelines = window.__timelines || {};")
     a("const tl = gsap.timeline({ paused: true });")
     a("const rise=(s,t,y=60,d=.6)=>tl.fromTo(s,{opacity:0,y},{opacity:1,y:0,duration:d,ease:'power3.out'},t);")

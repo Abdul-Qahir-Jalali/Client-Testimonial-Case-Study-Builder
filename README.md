@@ -9,8 +9,9 @@ A Streamlit app that turns raw client feedback (typed notes, emails, interview t
 **Input:** free-form client notes, a `.txt`/`.md` file, **an audio/video recording, or a link** (YouTube, TikTok, Google Drive, Dropbox), plus basic project details
 **Output:**
 
-- **3–5 testimonial quotes** in short, medium and long lengths, each credited to the person who said it
+- **3–5 testimonial quotes** in short, medium and long lengths, each credited to the person who said it, with one-click copy
 - **A case study outline**: Challenge → Solution → Results, with a key metrics table
+- **A visual case study**: an animated story player and an editorial full-page view, in your chosen brand colour
 - **A clean Markdown file**, ready to download
 
 ---
@@ -22,6 +23,7 @@ A Streamlit app that turns raw client feedback (typed notes, emails, interview t
 - **Doesn't invent facts.** The AI is told to use only what's in the notes, and every result is then **checked in code** against the original text.
 - **Corrects itself.** If the fact check finds a problem, it's sent back to the AI once for correction. Anything still wrong is clearly flagged for review.
 - **Credits the right speaker.** Quotes are attributed to whoever actually said them, and an approval reminder is added when that isn't the main contact.
+- **Ready to use.** Testimonials open with a featured quote, can be filtered by length, and copy with their attribution. The case study comes as an auto-playing story or a full page, and the whole result exports as Markdown.
 - **Ready to demo.** Four realistic sample inputs are included.
 
 ---
@@ -110,14 +112,14 @@ The app opens in your browser at **http://localhost:8501**. To stop it, press `C
    - **Upload text file**: drag and drop a `.txt` or `.md` file
    - **Audio / video**: upload a recording or paste a link (see *Using a recording or link* below)
 2. **Check the project details** on the right: client, contact, role, industry, service, timeline.
-3. Click **Generate content**. It usually takes 5–20 seconds.
+3. Optionally set your **agency name** and the **case study colour** in the left sidebar, then click **Generate content**. It usually takes 10–30 seconds.
 4. Review the results:
    - **Testimonials**: the strongest quote is featured at the top; each card shows its length, theme and speaker. Filter by **Short / Medium / Long**, and use **Copy** (one quote, with its attribution) or **Copy all** to paste straight into a page or proposal
    - **Case study**: two views:
      - **Story** (default): an animated, auto-playing visual story, chapter by chapter: cover, the challenge (problem numbers in red), the approach (a step flow that draws itself), the transformation (numbers counting from *before* to *after* with animated bars), the results (count-up metrics), client quotes revealed word by word, and a closing. Use the previous / next buttons, the arrow keys, the progress bar or space to pause.
      - **Full page**: the same case study as an editorial page to read in full.
 
-     Set the colour with **Case study colour** in the sidebar. The internal *Review before publishing* checklist sits in a separate collapsible box above, so it never appears in the client view.
+     The **Case study colour** from the sidebar is used in both views. The internal *Review before publishing* checklist sits in a separate collapsible box above, so it never appears in the client view.
    - **Markdown**: the final file
 5. Click **Download Markdown** or **Save to output/ folder**.
 
@@ -219,6 +221,7 @@ Client-Testimonial-Case-Study-Builder/
 ├── output/                     # Saved Markdown files (not committed)
 ├── .streamlit/config.toml      # Allows uploads up to 2 GB
 ├── .env.example                # Settings template (copy to .env, never commit .env)
+├── .gitignore                  # Keeps .env, the virtual environment and generated output out of Git
 └── requirements.txt            # Python dependencies
 ```
 

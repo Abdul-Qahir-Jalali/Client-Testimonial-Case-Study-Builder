@@ -97,6 +97,7 @@ def video_section(content: dict, details: ProjectDetails, accent: str) -> None:
         ui.note("Free AI makes a short cinematic film of the client's story from prompts: a storyboard, then each "
                 "shot is generated and animated (Wan 2.2 on Hugging Face). Expect 3-6 minutes. Your real, "
                 "fact-checked numbers appear on a results card, never in AI-made footage. "
+                "Only scene descriptions (client names removed) are sent to the free AI services. "
                 "An optional free HF_TOKEN in .env raises the daily limit.", "wand-sparkles")
     else:
         ui.note("Branded animated slides built from your fact-checked numbers and best quote. Works offline, "
@@ -114,7 +115,10 @@ def video_section(content: dict, details: ProjectDetails, accent: str) -> None:
         try:
             with st.spinner("Rendering the video..."):
                 if shots:
-                    path = video_maker.render_ai_film(shots, content, details, accent, voice=voice)
+                    try:
+                        path = video_maker.render_ai_film(shots, content, details, accent, voice=voice)
+                    finally:
+                        ai_video.cleanup(shots)     # the downloaded shots are only needed for this render
                 else:
                     path = video_maker.render_video(content, details, accent, voice=voice)
             st.session_state["video"] = {"path": str(path), "ai": bool(shots)}
@@ -183,13 +187,13 @@ def share_section(content: dict, details: ProjectDetails) -> None:
                 st.text_input("Title", key="share_title_youtube", max_chars=social.TITLE_LIMIT)
             st.text_area("Caption", key=f"share_cap_{p.key}", height=260 if p.key == "linkedin" else 170)
             st.text_input("Hashtags", key=f"share_tags_{p.key}")
-            text = social.compose(social.Post(""), st.session_state[f"share_cap_{p.key}"],
-                                  st.session_state[f"share_tags_{p.key}"])
+            text = social.compose(st.session_state.get(f"share_cap_{p.key}", ""),
+                                  st.session_state.get(f"share_tags_{p.key}", ""))
             if len(text) > p.limit:
                 ui.banner("warn", f"{len(text):,} characters: {p.name} allows {p.limit:,}", "Shorten the caption or hashtags.")
             else:
                 ui.note(f"{len(text):,} of {p.limit:,} characters", "hash")
-            extras = [("Copy title", st.session_state["share_title_youtube"], "Title")] if p.key == "youtube" else []
+            extras = [("Copy title", st.session_state.get("share_title_youtube", ""), "Title")] if p.key == "youtube" else []
             components.html(share_view.post_buttons_html(p.open_label, p.icon, text, social.open_url(p, text), extras),
                             height=64)
             ui.note(p.tips, "lightbulb")

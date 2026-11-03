@@ -16,6 +16,7 @@ import re
 import subprocess
 import tempfile
 from dataclasses import dataclass
+from functools import lru_cache
 from datetime import datetime
 from pathlib import Path
 
@@ -66,6 +67,7 @@ _FONT_DIRS = ["C:/Windows/Fonts", "/Library/Fonts", "/System/Library/Fonts/Suppl
               "/usr/share/fonts/truetype/dejavu", "/usr/share/fonts/truetype/liberation", "/usr/share/fonts/TTF"]
 
 
+@lru_cache(maxsize=64)
 def font(size: int, bold: bool = False) -> ImageFont.FreeTypeFont:
     for name in _FONT_FILES[bold]:
         for folder in _FONT_DIRS:
@@ -129,8 +131,9 @@ def build_scenes(content: dict, details: ProjectDetails) -> list[Scene]:
 
     if metrics:
         lead = metrics[0]
-        hook = {"big": str(lead["value"]), "label": str(lead["label"]), "title": cs["title"], "client": client}
-        spoken = f"{lead['label']}: {lead['value']}. Here is how {client} did it."
+        label = str(lead.get("label", "")).strip()
+        hook = {"big": str(lead["value"]), "label": label, "title": cs["title"], "client": client}
+        spoken = f"{label}: {lead['value']}. Here is how {client} did it." if label else f"Here is how {client} did it."
     else:
         hook = {"big": "", "label": "", "title": cs["title"], "client": client}
         spoken = cs["title"]
@@ -140,7 +143,7 @@ def build_scenes(content: dict, details: ProjectDetails) -> list[Scene]:
     scenes.append(Scene("challenge", {"text": challenge}, "The challenge. " + challenge, 4.5))
 
     if metrics:
-        rows = [{"value": str(m["value"]), "label": str(m["label"])} for m in metrics]
+        rows = [{"value": str(m["value"]), "label": str(m.get("label", "")).strip()} for m in metrics]
         spoken = "The results. " + ". ".join(f"{r['label']}, {r['value']}" for r in rows[:2])
     else:
         rows = [{"value": "", "label": _first_sentences(r, 90)} for r in cs["results"][:3]]
@@ -235,6 +238,11 @@ def logo_mark(size: int, accent) -> Image.Image:
 
 
 def _background(accent) -> Image.Image:
+    return _background_base(tuple(accent)).copy()      # callers draw on it, so never hand out the cached one
+
+
+@lru_cache(maxsize=8)
+def _background_base(accent: tuple) -> Image.Image:
     top, bottom = (11, 16, 32), mix((11, 16, 32), accent, 0.38)
     col = Image.new("RGB", (1, H))
     for y in range(H):
@@ -328,37 +336,36 @@ def voiceover_available() -> bool:
         return False
 
 
-def _synthesize(text: str, voice: str, path: Path) -> None:
+def _synthesize_all(jobs: list[tuple[str, Path]], voice: str) -> None:
+    """Synthesize every narration line at once (one network round trip instead of one per scene)."""
     import edge_tts
+    rate = os.getenv("VIDEO_VOICE_RATE", "+12%")
 
-    async def go():
+    async def one(text: str, path: Path) -> None:
         spoken = text.replace("->", " to ").replace("=>", " to ")
-        await edge_tts.Communicate(spoken, voice, rate=os.getenv("VIDEO_VOICE_RATE", "+12%")).save(str(path))
+        await edge_tts.Communicate(spoken, voice, rate=rate).save(str(path))
 
+    async def go() -> None:
+        await asyncio.gather(*(one(t, p) for t, p in jobs))
+
+    loop = asyncio.new_event_loop()       # a fresh loop works whether or not the calling thread already has one
     try:
-        asyncio.run(go())
-    except RuntimeError:  # an event loop is already running in this thread
-        loop = asyncio.new_event_loop()
-        try:
-            loop.run_until_complete(go())
-        finally:
-            loop.close()
+        loop.run_until_complete(go())
+    finally:
+        loop.close()
 
 
 def make_voiceovers(scenes: list[Scene], workdir: Path) -> list[Path | None]:
     """One mp3 per scene; all None if voiceover isn't possible (offline, no edge-tts, ...)."""
     if not voiceover_available():
         return [None] * len(scenes)
-    voice = os.getenv("VIDEO_VOICE", DEFAULT_VOICE)
-    paths: list[Path | None] = []
+    paths = [workdir / f"voice{i}.mp3" for i in range(len(scenes))]
     try:
-        for i, scene in enumerate(scenes):
-            p = workdir / f"voice{i}.mp3"
-            _synthesize(scene.narration, voice, p)
-            paths.append(p if p.exists() and p.stat().st_size > 0 else None)
+        _synthesize_all([(s.narration, p) for s, p in zip(scenes, paths)], os.getenv("VIDEO_VOICE", DEFAULT_VOICE))
     except Exception:
         return [None] * len(scenes)
-    return paths if all(paths) else [None] * len(scenes)
+    ok = all(p.exists() and p.stat().st_size > 0 for p in paths)
+    return paths if ok else [None] * len(scenes)
 
 
 # --------------------------------------------------------------------------- #

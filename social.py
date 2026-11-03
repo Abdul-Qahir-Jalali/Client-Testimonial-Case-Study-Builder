@@ -78,19 +78,24 @@ def clean_hashtags(tags, limit: int) -> list[str]:
     return out[:limit]
 
 
-def compose(post: Post, caption: str | None = None, hashtags: str | None = None) -> str:
+def compose(caption: str, hashtags: str = "") -> str:
     """The text that is copied: caption, blank line, hashtags."""
-    body = (post.caption if caption is None else caption).strip()
-    tags = " ".join(post.hashtags) if hashtags is None else hashtags.strip()
+    body, tags = caption.strip(), hashtags.strip()
     return f"{body}\n\n{tags}".strip() if tags else body
 
 
+MAX_URL = 6000      # longer links are rejected by LinkedIn and some browsers
+
+
 def open_url(platform: Platform, text: str) -> str:
-    return platform.upload_url.format(text=urllib.parse.quote(text, safe="")) if "{text}" in platform.upload_url \
-        else platform.upload_url
+    """The page the button opens. LinkedIn gets the text prefilled when it fits in a URL; otherwise the user pastes it."""
+    if "{text}" not in platform.upload_url:
+        return platform.upload_url
+    url = platform.upload_url.format(text=urllib.parse.quote(text, safe=""))
+    return url if len(url) <= MAX_URL else platform.upload_url.format(text="")
 
 
-_NUM = re.compile(r"\d[\d,]*(?:\.\d+)?")
+_NUM = re.compile(r"(?<![A-Za-z\d])\d[\d,]*(?:\.\d+)?(?![A-Za-z])")   # skips digits inside words: B2B, 24x7, 3rd
 
 
 def _numbers(text: str) -> set[str]:
@@ -178,7 +183,7 @@ def _parse(data: dict) -> dict[str, Post]:
     return posts
 
 
-def _fallback(content: dict, details: ProjectDetails, link: str, tone: str) -> dict[str, Post]:
+def _fallback(content: dict, details: ProjectDetails, link: str) -> dict[str, Post]:
     """Deterministic posts built straight from the case study, used when the AI is unavailable."""
     cs = content["case_study"]
     metrics = [m for m in cs.get("key_metrics", []) if m.get("value")]
@@ -208,7 +213,7 @@ def write_posts(content: dict, details: ProjectDetails, *, tone: str = "Professi
     """Returns (posts, warnings, used_ai). Warnings list numbers that could not be matched to the case study."""
     link = link.strip()
     if not groq_ready():
-        return _fallback(content, details, link, tone), [], False
+        return _fallback(content, details, link), [], False
     cta = (f"End with a call to action that points to this link exactly as written: {link}" if link
            else f"End with a soft call to action to talk to {details.agency_name}. Do not invent any link.")
     prompt = PROMPT.format(tone=tone, emoji="a few, tasteful" if emojis else "none", cta=cta, brief=_brief(content, details))
@@ -228,7 +233,7 @@ def write_posts(content: dict, details: ProjectDetails, *, tone: str = "Professi
                     for k, v in issues.items()]
         return posts, warnings, True
     except Exception:
-        return _fallback(content, details, link, tone), [], False
+        return _fallback(content, details, link), [], False
 
 
 def _issues(posts: dict[str, Post], content: dict, details: ProjectDetails, link: str) -> dict[str, list[str]]:

@@ -59,6 +59,12 @@ function run(btn){
   if (url) window.open(url, '_blank', 'noopener');
 }
 document.querySelectorAll('button').forEach(b => b.addEventListener('click', () => run(b)));
+function resize(){   // wrapped buttons and the status line must never be clipped on narrow windows
+  try { const h = (Math.ceil(document.body.getBoundingClientRect().height) + 8) + 'px', f = window.frameElement;
+    f.style.height = h; f.parentElement.style.height = h; f.parentElement.style.flexBasis = h;
+  } catch (e) {}
+}
+window.addEventListener('load', resize); new ResizeObserver(resize).observe(document.body);
 """
 
 

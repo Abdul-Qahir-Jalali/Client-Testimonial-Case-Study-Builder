@@ -16,6 +16,7 @@ import io
 import json
 import os
 import re
+import shutil
 import tempfile
 import urllib.parse
 from dataclasses import dataclass
@@ -52,8 +53,11 @@ def hf_token() -> str:
     return os.getenv("HF_TOKEN", "").strip()
 
 
-def _headers() -> dict:
-    return {"Authorization": f"Bearer {hf_token()}"} if hf_token() else {}
+def _headers(url: str = "") -> dict:
+    """Auth header for Hugging Face hosts only; a URL returned by a Space is never trusted with the token."""
+    host = urllib.parse.urlparse(url).hostname or "" if url else "huggingface.co"
+    trusted = host == "huggingface.co" or host.endswith((".hf.space", ".huggingface.co"))
+    return {"Authorization": f"Bearer {hf_token()}"} if hf_token() and trusted else {}
 
 
 # --------------------------------------------------------------------------- #
@@ -139,7 +143,7 @@ def _explain(payload: str) -> str:
 
 def _upload(base: str, name: str, data: bytes) -> dict:
     r = requests.post(f"{base}/gradio_api/upload", files=[("files", (name, data, "image/jpeg"))],
-                      headers=_headers(), timeout=60)
+                      headers=_headers(base), timeout=60)
     r.raise_for_status()
     return {"path": r.json()[0], "meta": {"_type": "gradio.FileData"}}
 
@@ -147,11 +151,11 @@ def _upload(base: str, name: str, data: bytes) -> dict:
 def _call(base: str, endpoint: str, data: list, timeout: int = 420) -> Path:
     """Run a Gradio endpoint over HTTP and return the generated video as a local file."""
     try:
-        r = requests.post(f"{base}/gradio_api/call/{endpoint}", json={"data": data}, headers=_headers(), timeout=30)
+        r = requests.post(f"{base}/gradio_api/call/{endpoint}", json={"data": data}, headers=_headers(base), timeout=30)
         r.raise_for_status()
         event_id = r.json()["event_id"]
         result, event = None, ""
-        with requests.get(f"{base}/gradio_api/call/{endpoint}/{event_id}", headers=_headers(),
+        with requests.get(f"{base}/gradio_api/call/{endpoint}/{event_id}", headers=_headers(base),
                           stream=True, timeout=timeout) as stream:
             for raw in stream.iter_lines(decode_unicode=True):
                 if raw.startswith("event:"):
@@ -168,7 +172,7 @@ def _call(base: str, endpoint: str, data: list, timeout: int = 420) -> Path:
         url = _file_url(result, base)
         if not url:
             raise AIVideoError("The AI video service returned an unexpected response.")
-        video = requests.get(url, headers=_headers(), timeout=120)
+        video = requests.get(url, headers=_headers(url), timeout=120)
         video.raise_for_status()
     except AIVideoError:
         raise
@@ -217,12 +221,32 @@ def generate_scene_clip(scene: AIScene, seed: int) -> Path:
             raise first
 
 
+def _scrub(text: str, details: ProjectDetails) -> str:
+    """Replace the client, contact and agency names so confidential details never leave the machine in a prompt."""
+    for name, generic in ((details.client_name, "a small business"), (details.contact_name, "the founder"),
+                          (details.agency_name, "an agency")):
+        name = (name or "").strip()
+        if len(name) > 2:
+            text = re.sub(re.escape(name), generic, text, flags=re.IGNORECASE)
+    return text
+
+
+def cleanup(scenes: list[AIScene]) -> None:
+    """Delete the downloaded shot files once the video has been rendered."""
+    for scene in scenes:
+        if scene.clip:
+            shutil.rmtree(scene.clip.parent, ignore_errors=True)
+            scene.clip = None
+
+
 def generate_film(content: dict, details: ProjectDetails,
                   progress: Callable[[float, str], None] | None = None) -> list[AIScene]:
     """Storyboard + all shots. Raises AIVideoError only if no shot could be made."""
     note = progress or (lambda f, m: None)
     note(0.02, "Writing the storyboard...")
     scenes = storyboard(content, details)
+    for scene in scenes:      # prompts go to public third-party services: never send names
+        scene.visual = _scrub(scene.visual, details)
     made: list[AIScene] = []
     last_error: AIVideoError | None = None
     for i, scene in enumerate(scenes):

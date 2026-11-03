@@ -9,9 +9,13 @@
 </p>
 
 <p align="center">
-  <a href="assets/demo/demo.mp4"><img src="assets/demo/demo-preview.gif" width="270" alt="22-second demo: paste client notes, generate, the fact check passes, copy the featured testimonial"></a>
+  <a href="assets/demo/demo-landscape.mp4"><img src="assets/demo/demo-landscape-preview.gif" width="720" alt="22-second demo: paste client notes, generate, the fact check passes, copy the featured testimonial"></a>
   <br />
-  <sub><a href="assets/demo/demo.mp4">Watch the 22-second demo (MP4)</a> &middot; shown with demo data, not real clients</sub>
+  <sub>
+    <a href="assets/demo/demo-landscape.mp4">Watch the 22-second demo (MP4)</a> &middot;
+    <a href="assets/demo/demo-vertical.mp4">vertical cut for TikTok / Reels (MP4)</a> &middot;
+    shown with demo data, not real clients
+  </sub>
 </p>
 
 A Streamlit app that turns raw client feedback (typed notes, emails, interview transcripts, an **interview audio or video recording**, or a **video link**) into polished, ready-to-use marketing content. It uses the **Groq API** for writing and **ElevenLabs** for audio transcription.
@@ -35,6 +39,31 @@ A Streamlit app that turns raw client feedback (typed notes, emails, interview t
 - **Credits the right speaker.** Quotes are attributed to whoever actually said them, and an approval reminder is added when that isn't the main contact.
 - **Ready to use.** Testimonials open with a featured quote, can be filtered by length, and copy with their attribution. The case study comes as an auto-playing story or a full page, and the whole result exports as Markdown.
 - **Ready to demo.** Four realistic sample inputs are included.
+
+---
+
+## See it in action
+
+All screenshots use the built-in demo data, not real clients.
+
+<table>
+  <tr>
+    <td width="50%"><a href="assets/screenshots/01-add-feedback.png"><img src="assets/screenshots/01-add-feedback.png" alt="Add client feedback: type or paste notes, upload a file, or use a recording or link"></a></td>
+    <td width="50%"><a href="assets/screenshots/02-testimonials.png"><img src="assets/screenshots/02-testimonials.png" alt="Testimonials: fact check passed, a featured quote, length filters and copy buttons"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><b>1. Add feedback</b><br />Notes, a file, a recording or a link, plus the project details</td>
+    <td align="center"><b>2. Testimonials</b><br />Fact-checked, with a featured quote, length filters and one-click copy</td>
+  </tr>
+  <tr>
+    <td width="50%"><a href="assets/screenshots/03-story-player.png"><img src="assets/screenshots/03-story-player.png" alt="Story player: the before and after numbers count up with animated bars"></a></td>
+    <td width="50%"><a href="assets/screenshots/04-case-study.png"><img src="assets/screenshots/04-case-study.png" alt="Full-page case study: headline, key facts, results in numbers and a client quote"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><b>3. Story player</b><br />An auto-playing, chapter-by-chapter case study</td>
+    <td align="center"><b>4. Full-page case study</b><br />The same story as an editorial page, in your brand colour</td>
+  </tr>
+</table>
 
 ---
 
@@ -217,7 +246,8 @@ Client-Testimonial-Case-Study-Builder/
 ├── icons.py                    # Lucide icons (vendored SVGs) used across the UI
 ├── favicon.svg                 # Browser-tab icon
 ├── assets/                     # Logo files (mark and full lockup)
-│   └── demo/                   # 22-second launch video, poster and README preview GIF
+│   ├── demo/                   # 22-second launch video (landscape and vertical), posters and preview GIFs
+│   └── screenshots/            # README screenshots (demo data)
 ├── generator.py                # Main pipeline: Groq call, validation, self-correction, rendering
 ├── prompts.py                  # AI instructions and JSON output format
 ├── factcheck.py                # Code-level fact checks against the original notes

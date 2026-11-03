@@ -1,4 +1,4 @@
-"""Motion-graphics video made with HyperFrames (https://hyperframes.heygen.com).
+﻿"""The "Animated slides" video, animated with HyperFrames (https://hyperframes.heygen.com).
 
 The fact-checked case study is turned into an HTML composition animated with GSAP (kinetic text, counting
 numbers, bars that fill, a drawn logo, blurred scene transitions) and rendered to MP4 by the HyperFrames CLI.
@@ -321,7 +321,7 @@ def render_motion_video(content: dict, details: ProjectDetails, accent: str, *, 
     note = progress or (lambda f, m: None)
     missing = missing_tool()
     if missing:
-        raise VideoError(f"Motion graphics need {missing}. Install it, restart the app and try again.")
+        raise VideoError(f"Rich animation needs {missing}. Install it, restart the app and try again.")
     npx = _npx()
     scenes = build_scenes(content, details)
     out = _out_path(details, out_dir)

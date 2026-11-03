@@ -1,4 +1,4 @@
-# Product
+﻿# Product
 
 <!-- impeccable:product-schema 1 -->
 
@@ -28,7 +28,7 @@ Two claims together: every number in the output is checked in code against the o
 ## Capabilities and Constraints
 
 - Inputs: typed notes, `.txt`/`.md` upload, audio/video upload, or a public link (YouTube, TikTok, Google Drive, Dropbox); optional project details (client, contact, role, industry, service, timeline).
-- Outputs: 3 to 5 testimonials (short, medium, long) credited to the person who said them; a case study; a Markdown file; a 9:16 video (animated slides, HyperFrames motion graphics, or an AI-generated film built on free models); and per-platform captions and hashtags for LinkedIn, TikTok, Instagram, Facebook and YouTube Shorts.
+- Outputs: 3 to 5 testimonials (short, medium, long) credited to the person who said them; a case study; a Markdown file; a 9:16 video (animated slides made with HyperFrames, or an AI-generated film built on free models); and per-platform captions and hashtags for LinkedIn, TikTok, Instagram, Facebook and YouTube Shorts.
 - Sharing: the app never posts for the user. Each platform button copies the caption and opens that platform's upload page. Social captions are number-checked against the case study; AI scene prompts have client names removed before leaving the machine.
 - Speaker handling: after transcription the user names each speaker and marks the interviewer; interviewer words are never treated as client claims.
 - Case study views: an auto-playing story player and an editorial full-page view, both using the agency's chosen brand colour and name.

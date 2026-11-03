@@ -55,7 +55,7 @@ SOURCES = ["Upload a file", "Paste a link"]
 CS_VIEWS = ["Story", "Full page"]
 MD_VIEWS = ["Preview", "Source"]
 ROLES = ["Client", "Interviewer"]
-VIDEO_STYLES = ["Animated slides", "Motion graphics", "AI-generated film"]
+VIDEO_STYLES = ["Animated slides", "AI-generated film"]
 
 for key, _ in DETAIL_FIELDS:
     st.session_state.setdefault(key, "")
@@ -93,48 +93,44 @@ def video_section(content: dict, details: ProjectDetails, accent: str) -> None:
                         disabled=not video_maker.voiceover_available(),
                         help="Free text-to-speech (edge-tts). Needs an internet connection; "
                              "if it fails, the video is made without sound.")
-    use_motion = style == VIDEO_STYLES[1]
-    use_ai = style == VIDEO_STYLES[2]
-    if use_motion:
-        if motion_video.available():
-            ui.note("Kinetic text, numbers that count up, bars that fill and smooth scene transitions, rendered with "
-                    "HyperFrames. Everything on screen is your checked content. Takes about 3-4 minutes; the first "
-                    "run also downloads the renderer.", "wand-sparkles")
-        else:
-            ui.banner("warn", "Motion graphics need one more tool",
-                      f"Install {motion_video.missing_tool()}, restart the app, and this style will work. "
-                      "Until then the other two styles are unaffected.")
-    elif use_ai:
+    use_ai = style == VIDEO_STYLES[1]
+    rich = motion_video.available()
+    if use_ai:
         ui.note("Free AI makes a short cinematic film of the client's story from prompts: a storyboard, then each "
                 "shot is generated and animated (Wan 2.2 on Hugging Face). Expect 3-6 minutes. Your real, "
                 "fact-checked numbers appear on a results card, never in AI-made footage. "
                 "Only scene descriptions (client names removed) are sent to the free AI services. "
                 "An optional free HF_TOKEN in .env raises the daily limit.", "wand-sparkles")
+    elif rich:
+        ui.note("Animated with HyperFrames: text that reveals word by word, numbers that count up, bars that fill, a "
+                "drawn logo and smooth transitions, all from your fact-checked content. Takes several minutes "
+                "(about 3-6 on a typical PC); the first run also downloads the renderer.", "clapperboard")
     else:
-        ui.note("Branded animated slides built from your fact-checked numbers and best quote. Works offline, "
-                "usually under a minute.", "clapperboard")
+        ui.note(f"Branded slides with fades and a slow zoom, built from your fact-checked content. For richer "
+                f"animation (counting numbers, word-by-word text) install {motion_video.missing_tool()} and "
+                f"restart the app.", "clapperboard")
 
     if st.button("Create video", type="primary", use_container_width=True, key="btn_video"):
-        shots, motion_path = None, None
-        if use_motion and motion_video.available():
-            bar = st.progress(0.0, text="Starting...")
-            try:
-                motion_path = motion_video.render_motion_video(content, details, accent, voice=voice,
-                                                               progress=lambda f, m: bar.progress(f, text=m))
-            except video_maker.VideoError as exc:
-                ui.banner("warn", "Motion graphics unavailable - made the animated-slides version instead", str(exc))
-            bar.empty()
-        elif use_ai:
+        shots, slides_path = None, None
+        if use_ai:
             bar = st.progress(0.0, text="Starting...")
             try:
                 shots = ai_video.generate_film(content, details, lambda f, m: bar.progress(f, text=m))
             except ai_video.AIVideoError as exc:
                 ui.banner("warn", "AI video unavailable - made the animated-slides version instead", str(exc))
             bar.empty()
+        elif rich:
+            bar = st.progress(0.0, text="Starting...")
+            try:
+                slides_path = motion_video.render_motion_video(content, details, accent, voice=voice,
+                                                               progress=lambda f, m: bar.progress(f, text=m))
+            except video_maker.VideoError as exc:
+                ui.banner("warn", "Rich animation failed - made the quick version instead", str(exc))
+            bar.empty()
         try:
             with st.spinner("Rendering the video..."):
-                if motion_path:
-                    path = motion_path
+                if slides_path:
+                    path = slides_path
                 elif shots:
                     try:
                         path = video_maker.render_ai_film(shots, content, details, accent, voice=voice)

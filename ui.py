@@ -212,17 +212,6 @@ label p{font-weight:500 !important;color:#334155 !important}
 .stat .l{font-size:12.5px;color:var(--muted);margin-top:2px}
 .stat.good .v{color:#059669}.stat.bad .v{color:#DC2626}
 
-.quotes{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px;margin-top:6px}
-.qcard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px 22px;display:flex;flex-direction:column;
-  gap:14px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
-.qcard .meta{display:flex;gap:6px;flex-wrap:wrap}
-.pill{font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:999px;background:#F1F5F9;color:#475569}
-.pill.short{background:#ECFDF5;color:#047857}.pill.medium{background:#EFF6FF;color:#1D4ED8}.pill.long{background:#F5F3FF;color:#6D28D9}
-.qcard .q{font-size:16px;line-height:1.6;color:#1E293B;flex:1}
-.qcard .who{display:flex;align-items:center;gap:10px;border-top:1px solid #F1F5F9;padding-top:12px}
-.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;
-  font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.who .n{font-size:14px;font-weight:700;color:var(--ink)}.who .r{font-size:12.5px;color:var(--muted)}
 
 .empty{background:#fff;border:1px dashed #CBD5E1;border-radius:18px;padding:34px;text-align:center;color:var(--muted);margin-top:22px}
 .empty .big svg{display:block;margin:0 auto 4px}.empty .t{font-size:16px;font-weight:700;color:#334155;margin-top:6px}
@@ -376,25 +365,3 @@ def results_header(content: dict, client: str) -> None:
         unsafe_allow_html=True,
     )
 
-
-def _initials(name: str) -> str:
-    parts = [p for p in str(name or "").replace(".", " ").split() if p[:1].isalpha()]
-    if parts and parts[0].lower() in {"dr", "mr", "mrs", "ms", "prof"} and len(parts) > 1:
-        parts = parts[1:]
-    return ("".join(p[0] for p in parts[:2]) or "?").upper()
-
-
-def testimonial_cards(quotes: list[dict], company: str) -> None:
-    cards = []
-    for q in quotes:
-        length = str(q.get("length", "medium")).lower()
-        words = len(str(q.get("text", "")).split())
-        theme = f'<span class="pill">{_e(q.get("theme"))}</span>' if q.get("theme") else ""
-        role = ", ".join(x for x in [q.get("speaker_role"), company] if x)
-        cards.append(
-            f'<div class="qcard"><div class="meta"><span class="pill {_e(length)}">{_e(length.title())}</span>{theme}'
-            f'<span class="pill">{words} words</span></div>'
-            f'<div class="q">“{_e(q.get("text"))}”</div>'
-            f'<div class="who"><div class="avatar">{_e(_initials(q.get("speaker_name")))}</div>'
-            f'<div><div class="n">{_e(q.get("speaker_name"))}</div><div class="r">{_e(role)}</div></div></div></div>')
-    st.markdown(f'<div class="quotes">{"".join(cards)}</div>', unsafe_allow_html=True)

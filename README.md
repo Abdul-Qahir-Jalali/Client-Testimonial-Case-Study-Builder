@@ -112,7 +112,7 @@ The app opens in your browser at **http://localhost:8501**. To stop it, press `C
 2. **Check the project details** on the right: client, contact, role, industry, service, timeline.
 3. Click **Generate content**. It usually takes 5–20 seconds.
 4. Review the results:
-   - **Testimonials**: each quote with its length, theme and speaker
+   - **Testimonials**: the strongest quote is featured at the top; each card shows its length, theme and speaker. Filter by **Short / Medium / Long**, and use **Copy** (one quote, with its attribution) or **Copy all** to paste straight into a page or proposal
    - **Case study**: two views:
      - **Story** (default): an animated, auto-playing visual story, chapter by chapter: cover, the challenge (problem numbers in red), the approach (a step flow that draws itself), the transformation (numbers counting from *before* to *after* with animated bars), the results (count-up metrics), client quotes revealed word by word, and a closing. Use the previous / next buttons, the arrow keys, the progress bar or space to pause.
      - **Full page**: the same case study as an editorial page to read in full.
@@ -208,6 +208,7 @@ Client-Testimonial-Case-Study-Builder/
 ├── generator.py                # Main pipeline: Groq call, validation, self-correction, rendering
 ├── prompts.py                  # AI instructions and JSON output format
 ├── factcheck.py                # Code-level fact checks against the original notes
+├── testimonial_view.py         # Testimonials tab: featured quote, filters, copy buttons
 ├── story_view.py               # Animated case-study story player (Story view)
 ├── case_study_view.py          # Editorial case-study page (Full page view)
 ├── transcribe.py               # Audio / video / link → speaker-labelled transcript (ElevenLabs Scribe)

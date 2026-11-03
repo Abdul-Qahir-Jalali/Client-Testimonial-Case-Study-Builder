@@ -20,6 +20,7 @@ from generator import (
 import ui
 from case_study_view import render_case_study_html
 from story_view import render_story_html
+from testimonial_view import estimate_height, render_testimonials_html
 from transcribe import (
     MEDIA_TYPES,
     TranscriptionError,
@@ -302,7 +303,9 @@ else:
 
     tab1, tab2, tab3 = st.tabs(["Testimonials", "Case study", "Markdown"])
     with tab1:
-        ui.testimonial_cards(result.content["testimonials"], details.client_name)
+        quotes = result.content["testimonials"]
+        components.html(render_testimonials_html(quotes, details.client_name, accent),
+                        height=estimate_height(quotes))
     with tab2:
         if result.content.get("review_notes"):
             with st.expander(f"Internal: review before publishing ({len(result.content['review_notes'])} item(s)) "

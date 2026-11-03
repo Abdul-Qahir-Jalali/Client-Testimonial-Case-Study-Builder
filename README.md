@@ -178,6 +178,7 @@ The **Video** tab turns the fact-checked result into a 20–35 second 9:16 video
 | **AI-generated film** | A real prompt-to-video film of the client's story: Groq writes a 3-shot storyboard, each shot is generated from its prompt and animated by free open-source AI (FLUX for the frame, Wan 2.2 on Hugging Face for the motion), then captions, narration and a results card are added | Internet; expect 3–6 minutes |
 
 - The AI only makes the cinematic footage. Your real numbers always appear on a results card drawn by the app from your checked content, and the narration is told not to invent statistics.
+- **Background music** (on by default, any style): a short royalty-free track is composed by the app itself (a soft pad, plucked arpeggio, bass and a gentle beat; the mood is picked from the client name), then mixed under the voiceover so it dips while someone speaks. Nothing is downloaded and no licence is needed. Untick **Add background music** to skip it.
 - The voiceover uses free text-to-speech (`edge-tts`) and needs an internet connection. If it fails, you get a silent video.
 - The AI models run on free shared services, so quality and speed vary. If they are busy or the daily quota is used up, the app says so and builds the animated-slides version instead.
 - A free Hugging Face token is optional: set `HF_TOKEN` in `.env` for a bigger daily limit. `VIDEO_VOICE` and `VIDEO_VOICE_RATE` change the voice and speed.
@@ -288,6 +289,7 @@ Client-Testimonial-Case-Study-Builder/
 ├── video_maker.py              # Video tab: scenes, captions, voiceover and ffmpeg assembly
 ├── social.py                   # Share tab: per-platform captions, hashtags and number check
 ├── share_view.py               # Share tab: copy-and-open buttons
+├── music.py                    # Royalty-free background music, composed in code and mixed under the voiceover
 ├── motion_video.py             # Animated slides: HyperFrames composition (GSAP) and render
 ├── ai_video.py                 # Free prompt-to-video: storyboard, FLUX frames, Wan 2.2 animation
 ├── transcribe.py               # Audio / video / link → speaker-labelled transcript (ElevenLabs Scribe)

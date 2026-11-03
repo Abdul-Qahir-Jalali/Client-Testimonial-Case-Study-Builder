@@ -21,6 +21,7 @@ import ui
 from case_study_view import render_case_study_html
 import ai_video
 import motion_video
+import music
 import share_view
 import social
 import video_maker
@@ -93,6 +94,8 @@ def video_section(content: dict, details: ProjectDetails, accent: str) -> None:
                         disabled=not video_maker.voiceover_available(),
                         help="Free text-to-speech (edge-tts). Needs an internet connection; "
                              "if it fails, the video is made without sound.")
+    music_on = st.checkbox("Add background music", value=True, key="video_music",
+                           help="Royalty-free music composed by the app. It dips automatically while the voiceover speaks.")
     use_ai = style == VIDEO_STYLES[1]
     rich = motion_video.available()
     if use_ai:
@@ -138,6 +141,12 @@ def video_section(content: dict, details: ProjectDetails, accent: str) -> None:
                         ai_video.cleanup(shots)     # the downloaded shots are only needed for this render
                 else:
                     path = video_maker.render_video(content, details, accent, voice=voice)
+            if music_on:
+                try:
+                    with st.spinner("Composing the background music..."):
+                        music.add_background_music(path, seed=details.client_name)
+                except video_maker.VideoError as exc:
+                    ui.banner("warn", "The video is ready, but the music could not be added", str(exc))
             st.session_state["video"] = {"path": str(path), "ai": bool(shots)}
         except video_maker.VideoError as exc:
             ui.banner("err", "Could not create the video", str(exc))

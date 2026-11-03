@@ -35,6 +35,11 @@ WIDGET_ICONS = [
     ('[role="tablist"] > [role="tab"]:nth-child(1) p', "message-square-quote"),
     ('[role="tablist"] > [role="tab"]:nth-child(2) p', "chart-column"),
     ('[role="tablist"] > [role="tab"]:nth-child(3) p', "file-text"),
+    ('[role="tablist"] > [role="tab"]:nth-child(4) p', "video"),
+    (".st-key-btn_video button p", "sparkles"),
+    (".st-key-dl_video button p", "download"),
+    (".st-key-video_style [role=\"radiogroup\"] > :nth-child(1) p", "clapperboard"),
+    (".st-key-video_style [role=\"radiogroup\"] > :nth-child(2) p", "wand-sparkles"),
     (".st-key-exp_fixed summary p", "wrench"),
     (".st-key-exp_review summary p", "lock"),
 ]

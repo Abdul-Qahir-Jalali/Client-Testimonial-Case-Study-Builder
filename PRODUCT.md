@@ -8,7 +8,7 @@ web
 
 ## Users
 
-Agency teams (for example, account managers and marketers at Allure Digital) who collect client feedback as call notes, emails, interview transcripts, or audio/video recordings and need to turn it into publishable proof: client testimonials and a case study. They work at a desk, between client calls, and must get the client's approval before anything is published.
+Agency teams (for example, account managers and marketers) who collect client feedback as call notes, emails, interview transcripts, or audio/video recordings and need to turn it into publishable proof: client testimonials and a case study. They work at a desk, between client calls, and must get the client's approval before anything is published.
 
 ## Product Purpose
 

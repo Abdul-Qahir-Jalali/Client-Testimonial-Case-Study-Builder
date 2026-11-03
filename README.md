@@ -38,6 +38,7 @@ A Streamlit app that turns raw client feedback (typed notes, emails, interview t
 - **Corrects itself.** If the fact check finds a problem, it's sent back to the AI once for correction. Anything still wrong is clearly flagged for review.
 - **Credits the right speaker.** Quotes are attributed to whoever actually said them, and an approval reminder is added when that isn't the main contact.
 - **Ready to use.** Testimonials open with a featured quote, can be filtered by length, and copy with their attribution. The case study comes as an auto-playing story or a full page, and the whole result exports as Markdown.
+- **Short video.** One click makes a vertical video for TikTok, Reels or Shorts, as branded slides or as a free AI-generated film of the client's story, with an optional free voiceover.
 - **Ready to demo.** Four realistic sample inputs are included.
 
 ---
@@ -128,6 +129,9 @@ ELEVENLABS_API_KEY=your_elevenlabs_api_key_here
 ELEVENLABS_STT_MODEL=scribe_v2
 
 AGENCY_NAME=Your Agency Name
+
+# Optional, for the Video tab (see "Short vertical video")
+HF_TOKEN=
 ```
 
 Don't put quotes or spaces around the keys. Your `.env` is listed in `.gitignore`, so it is never committed. Without an ElevenLabs key, everything works except audio, video and link transcription. Video conversion uses the `imageio-ffmpeg` package (installed by `requirements.txt`), so no separate ffmpeg install is needed.
@@ -160,7 +164,23 @@ The app opens in your browser at **http://localhost:8501**. To stop it, press `C
 
      The **Case study colour** from the sidebar is used in both views. The internal *Review before publishing* checklist sits in a separate collapsible box above, so it never appears in the client view.
    - **Markdown**: the final file
+   - **Video**: a 1080x1920 vertical MP4 for TikTok, Reels and Shorts (see *Short vertical video* below)
 5. Click **Download Markdown** or **Save to output/ folder**.
+
+### Short vertical video
+
+The **Video** tab turns the fact-checked result into a 20–35 second 9:16 video: hook with the headline number, the challenge, the results, the best client quote and a closing card with your agency name. Pick a style, optionally keep the voiceover on, and click **Create video**.
+
+| Style | What it is | Needs |
+|---|---|---|
+| **Animated slides** | Branded slides in your case study colour, with fades and a slow zoom | Nothing; works offline |
+| **AI-generated film** | A real prompt-to-video film of the client's story: Groq writes a 3-shot storyboard, each shot is generated from its prompt and animated by free open-source AI (FLUX for the frame, Wan 2.2 on Hugging Face for the motion), then captions, narration and a results card are added | Internet; expect 3–6 minutes |
+
+- The AI only makes the cinematic footage. Your real numbers always appear on a results card drawn by the app from your checked content, and the narration is told not to invent statistics.
+- The voiceover uses free text-to-speech (`edge-tts`) and needs an internet connection. If it fails, you get a silent video.
+- The AI models run on free shared services, so quality and speed vary. If they are busy or the daily quota is used up, the app says so and builds the animated-slides version instead.
+- A free Hugging Face token is optional: set `HF_TOKEN` in `.env` for a bigger daily limit. `VIDEO_VOICE` and `VIDEO_VOICE_RATE` change the voice and speed.
+- Videos are saved in `output/` and can be downloaded from the tab.
 
 ### Using a recording or link
 
@@ -254,6 +274,8 @@ Client-Testimonial-Case-Study-Builder/
 ├── testimonial_view.py         # Testimonials tab: featured quote, filters, copy buttons
 ├── story_view.py               # Animated case-study story player (Story view)
 ├── case_study_view.py          # Editorial case-study page (Full page view)
+├── video_maker.py              # Video tab: scenes, captions, voiceover and ffmpeg assembly
+├── ai_video.py                 # Free prompt-to-video: storyboard, FLUX frames, Wan 2.2 animation
 ├── transcribe.py               # Audio / video / link → speaker-labelled transcript (ElevenLabs Scribe)
 ├── cli.py                      # Optional command-line version
 ├── templates/

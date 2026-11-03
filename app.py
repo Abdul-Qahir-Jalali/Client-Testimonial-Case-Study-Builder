@@ -19,6 +19,8 @@ from generator import (
 )
 import ui
 from case_study_view import render_case_study_html
+import ai_video
+import video_maker
 from story_view import render_story_html
 from testimonial_view import estimate_height, render_testimonials_html
 from transcribe import (
@@ -50,6 +52,7 @@ SOURCES = ["Upload a file", "Paste a link"]
 CS_VIEWS = ["Story", "Full page"]
 MD_VIEWS = ["Preview", "Source"]
 ROLES = ["Client", "Interviewer"]
+VIDEO_STYLES = ["Animated slides", "AI-generated film"]
 
 for key, _ in DETAIL_FIELDS:
     st.session_state.setdefault(key, "")
@@ -78,6 +81,52 @@ def load_sample(name: str) -> None:
 def fmt_duration(seconds: float) -> str:
     m, s = divmod(int(seconds), 60)
     return f"{m}:{s:02d} min" if m else f"{s} sec"
+
+
+def video_section(content: dict, details: ProjectDetails, accent: str) -> None:
+    """Tab 4: short vertical video (9:16) for TikTok / Reels / Shorts."""
+    style = st.radio("Video style", VIDEO_STYLES, horizontal=True, label_visibility="collapsed", key="video_style")
+    voice = st.checkbox("Add a voiceover", value=True, key="video_voice",
+                        disabled=not video_maker.voiceover_available(),
+                        help="Free text-to-speech (edge-tts). Needs an internet connection; "
+                             "if it fails, the video is made without sound.")
+    use_ai = style == VIDEO_STYLES[1]
+    if use_ai:
+        ui.note("Free AI makes a short cinematic film of the client's story from prompts: a storyboard, then each "
+                "shot is generated and animated (Wan 2.2 on Hugging Face). Expect 3-6 minutes. Your real, "
+                "fact-checked numbers appear on a results card, never in AI-made footage. "
+                "An optional free HF_TOKEN in .env raises the daily limit.", "wand-sparkles")
+    else:
+        ui.note("Branded animated slides built from your fact-checked numbers and best quote. Works offline, "
+                "usually under a minute.", "clapperboard")
+
+    if st.button("Create video", type="primary", use_container_width=True, key="btn_video"):
+        shots = None
+        if use_ai:
+            bar = st.progress(0.0, text="Starting...")
+            try:
+                shots = ai_video.generate_film(content, details, lambda f, m: bar.progress(f, text=m))
+            except ai_video.AIVideoError as exc:
+                ui.banner("warn", "AI video unavailable - made the animated-slides version instead", str(exc))
+            bar.empty()
+        try:
+            with st.spinner("Rendering the video..."):
+                if shots:
+                    path = video_maker.render_ai_film(shots, content, details, accent, voice=voice)
+                else:
+                    path = video_maker.render_video(content, details, accent, voice=voice)
+            st.session_state["video"] = {"path": str(path), "ai": bool(shots)}
+        except video_maker.VideoError as exc:
+            ui.banner("err", "Could not create the video", str(exc))
+
+    saved = st.session_state.get("video")
+    if saved and Path(saved["path"]).exists():
+        left, mid, right = st.columns([1, 1, 1])
+        mid.video(saved["path"])
+        data = Path(saved["path"]).read_bytes()
+        mid.download_button("Download video (MP4)", data, file_name=Path(saved["path"]).name, mime="video/mp4",
+                            use_container_width=True, type="primary", key="dl_video")
+        ui.note("1080x1920 MP4, ready for TikTok, Instagram Reels and YouTube Shorts. Saved in the output/ folder.", "video")
 
 
 def use_transcript(file_id: str) -> None:
@@ -278,6 +327,7 @@ if generate_clicked:
         with st.spinner("Writing testimonials and case study, then fact-checking them..."):
             st.session_state["result"] = generate(st.session_state["notes"], details)
             st.session_state["details"] = details
+            st.session_state.pop("video", None)  # a new result makes the old video stale
     except GenerationError as exc:
         ui.banner("err", "Could not generate content", str(exc))
 
@@ -301,7 +351,7 @@ else:
                          key="exp_fixed"):
             st.markdown("\n".join(f"- {i}" for i in fc["auto_fixed"]))
 
-    tab1, tab2, tab3 = st.tabs(["Testimonials", "Case study", "Markdown"])
+    tab1, tab2, tab3, tab4 = st.tabs(["Testimonials", "Case study", "Markdown", "Video"])
     with tab1:
         quotes = result.content["testimonials"]
         components.html(render_testimonials_html(quotes, details.client_name, accent),
@@ -327,6 +377,9 @@ else:
                 st.markdown(result.markdown)
             else:
                 st.code(result.markdown, language="markdown")
+
+    with tab4:
+        video_section(result.content, details, accent)
 
     st.write("")
     d1, d2, _ = st.columns([1, 1, 1])

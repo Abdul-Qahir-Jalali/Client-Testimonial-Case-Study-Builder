@@ -333,3 +333,5 @@ else:
     if d2.button("Save to output/ folder", use_container_width=True, key="btn_save"):
         path = save_markdown(result.markdown, details)
         st.toast(f"Saved {Path(path).name}")
+
+ui.page_footer()

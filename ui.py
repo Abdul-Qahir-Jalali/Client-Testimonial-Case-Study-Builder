@@ -6,6 +6,7 @@ Purely presentational - no business logic lives here. All model-generated text i
 from __future__ import annotations
 
 import html
+import itertools
 
 import streamlit as st
 
@@ -186,6 +187,12 @@ label p{font-weight:500 !important;color:#334155 !important}
 .note{font-size:12.5px;color:var(--muted);display:flex;gap:6px;align-items:center;margin-top:6px}
 .note svg{flex:none}
 .hero .tag svg,.hero .feat svg{flex:none}
+.hero-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.hero-top > svg{flex:none;filter:drop-shadow(0 6px 14px rgba(15,23,42,.45))}
+.hero-brand{font-weight:800;font-size:17px;letter-spacing:-.01em;color:#fff;margin-right:4px}
+.page-foot{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:40px;padding-top:20px;
+  border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+.page-foot b{color:#334155;font-weight:700}
 
 .banner{border-radius:14px;padding:14px 18px;display:flex;gap:12px;align-items:flex-start;font-size:14px;margin:6px 0 12px}
 .banner .ic{display:flex;flex:none;margin-top:1px}
@@ -218,7 +225,7 @@ label p{font-weight:500 !important;color:#334155 !important}
 .who .n{font-size:14px;font-weight:700;color:var(--ink)}.who .r{font-size:12.5px;color:var(--muted)}
 
 .empty{background:#fff;border:1px dashed #CBD5E1;border-radius:18px;padding:34px;text-align:center;color:var(--muted);margin-top:22px}
-.empty .big{color:var(--accent)}.empty .big svg{display:block;margin:0 auto}.empty .t{font-size:16px;font-weight:700;color:#334155;margin-top:6px}
+.empty .big svg{display:block;margin:0 auto 4px}.empty .t{font-size:16px;font-weight:700;color:#334155;margin-top:6px}
 
 .sb-brand{display:flex;align-items:center;gap:12px;padding-bottom:16px;margin-bottom:16px;border-bottom:1px solid rgba(255,255,255,.08)}
 .sb-logo{width:44px;height:44px;display:flex;flex:none;align-items:center;justify-content:center;
@@ -253,7 +260,8 @@ def hero() -> None:
     st.markdown(
         f"""
 <div class="hero">
-  <span class="tag">{svg("sparkles", 14)} AI CONTENT STUDIO</span>
+  <div class="hero-top">{logo_mark(46, "#1B2440")}<span class="hero-brand">Testimonial Studio</span>
+    <span class="tag">{svg("sparkles", 14)} AI CONTENT STUDIO</span></div>
   <h1>Client Testimonial &amp; Case Study Builder</h1>
   <p>Turn raw client feedback, interview transcripts or recordings into polished testimonials and a
      Challenge {svg("arrow-right", 15)} Solution {svg("arrow-right", 15)} Results case study, with every number fact-checked against the source.</p>
@@ -291,12 +299,16 @@ def banner(kind: str, title: str, body: str = "", items: list[str] | None = None
                 f'<div><b>{_e(title)}</b>{body_html}{lst}</div></div>', unsafe_allow_html=True)
 
 
+_logo_ids = itertools.count(1)
+
+
 def logo_mark(size: int = 40, fill: str = "#0F172A") -> str:
     """The Testimonial Studio mark (same artwork as assets/logo-mark.svg), inline so it needs no file serving."""
+    gid = f"tsg{next(_logo_ids)}"   # unique per copy: several marks can share one page
     return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 64 64" role="img" '
-            f'aria-label="Testimonial Studio"><defs><linearGradient id="tsg" x1="0" y1="0" x2="1" y2="1">'
+            f'aria-label="Testimonial Studio"><defs><linearGradient id="{gid}" x1="0" y1="0" x2="1" y2="1">'
             f'<stop offset="0" stop-color="#818CF8"/><stop offset="1" stop-color="#C084FC"/></linearGradient></defs>'
-            f'<path d="M32 3l25 14.5v29L32 61 7 46.5v-29z" fill="{fill}" stroke="url(#tsg)" stroke-width="2.5" '
+            f'<path d="M32 3l25 14.5v29L32 61 7 46.5v-29z" fill="{fill}" stroke="url(#{gid})" stroke-width="2.5" '
             f'stroke-linejoin="round"/><rect x="18" y="19" width="28" height="7" rx="3.5" fill="#fff"/>'
             f'<rect x="28.5" y="19" width="7" height="27" rx="3.5" fill="#fff"/><circle cx="45" cy="44" r="5" fill="#F59E0B"/></svg>')
 
@@ -330,10 +342,16 @@ def sidebar_footer() -> None:
 
 def empty_state() -> None:
     st.markdown(
-        f"""<div class="empty"><div class="big">{svg("sparkles", 36)}</div><div class="t">Your content will appear here</div>
+        f"""<div class="empty"><div class="big">{logo_mark(64)}</div><div class="t">Your content will appear here</div>
         <div>Add client feedback, fill in the project details and click <b>Generate content</b>.</div></div>""",
         unsafe_allow_html=True,
     )
+
+
+def page_footer() -> None:
+    st.markdown(f'<div class="page-foot">{logo_mark(22)}<span><b>Testimonial Studio</b> · '
+                f'Case studies from client feedback · Always get client approval before publishing.</span></div>',
+                unsafe_allow_html=True)
 
 
 def results_header(content: dict, client: str) -> None:

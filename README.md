@@ -4,6 +4,16 @@
 
 <h1 align="center">Client Testimonial &amp; Case Study Builder</h1>
 
+<p align="center">
+  <em>Client feedback in, proof out, with every number fact-checked against the source.</em>
+</p>
+
+<p align="center">
+  <a href="assets/demo/demo.mp4"><img src="assets/demo/demo-preview.gif" width="270" alt="22-second demo: paste client notes, generate, the fact check passes, copy the featured testimonial"></a>
+  <br />
+  <sub><a href="assets/demo/demo.mp4">Watch the 22-second demo (MP4)</a> &middot; shown with demo data, not real clients</sub>
+</p>
+
 A Streamlit app that turns raw client feedback (typed notes, emails, interview transcripts, an **interview audio or video recording**, or a **video link**) into polished, ready-to-use marketing content. It uses the **Groq API** for writing and **ElevenLabs** for audio transcription.
 
 **Input:** free-form client notes, a `.txt`/`.md` file, **an audio/video recording, or a link** (YouTube, TikTok, Google Drive, Dropbox), plus basic project details
@@ -207,6 +217,7 @@ Client-Testimonial-Case-Study-Builder/
 ├── icons.py                    # Lucide icons (vendored SVGs) used across the UI
 ├── favicon.svg                 # Browser-tab icon
 ├── assets/                     # Logo files (mark and full lockup)
+│   └── demo/                   # 22-second launch video, poster and README preview GIF
 ├── generator.py                # Main pipeline: Groq call, validation, self-correction, rendering
 ├── prompts.py                  # AI instructions and JSON output format
 ├── factcheck.py                # Code-level fact checks against the original notes
@@ -270,6 +281,14 @@ Results are saved to `output/<client>-case-study-<timestamp>.md`.
 | *Running scripts is disabled* (PowerShell) | Run `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass` first, or use Command Prompt. |
 | `streamlit` / `pip` is not recognized | Activate the virtual environment first (step 2). |
 | `python` is not recognized | Install Python from python.org and tick **"Add Python to PATH"**. |
+
+---
+
+## Credits
+
+- Demo video music: "Happy Beats: Business Moves" by Sascha Ende ([ende.app](https://ende.app)), licensed [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+- Demo video sound effects: [Kenney](https://kenney.nl) and unicae_games, public domain (CC0).
+- Icons: [Lucide](https://lucide.dev), ISC licence.
 
 ---
 
